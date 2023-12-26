@@ -36,3 +36,21 @@ while true; do
     # Copy the SSH public key to the specified server
     copy_ssh_key "$username" "$ip_address"
 done
+
+
+read -p "Enter the URL of the repository: " repo_url
+read -p "Enter the username for the repository: " repo_username
+read -s -p "Enter the password for the repository: " repo_password
+echo
+
+# Download the repository using wget with provided credentials
+wget --user="$repo_username" --password="$repo_password" "$repo_url"
+
+# Get the filename of the downloaded repository
+repo_file=$(basename "$repo_url")
+
+# Unzip the downloaded repository
+unzip "$repo_file"
+
+# Change directory to the extracted repository
+cd "${repo_file%.*}"
