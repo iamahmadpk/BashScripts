@@ -54,3 +54,29 @@ unzip "$repo_file"
 
 # Change directory to the extracted repository
 cd "${repo_file%.*}"
+
+execute_install_script() {
+    local db_ip="$1"
+    local content_portal_ip="$2"
+
+    sudo ./Install-invisily.sh \
+        --installation-type=online \
+        --install-all \
+        --remote-db-ip="$db_ip" \
+        --remote-db-ssh-port=22 \
+        --remote-db-ssh-username=invisily \
+        --remote-ssh-key=/home/invisily/.ssh/id_rsa \
+        --db-root-password=Invisily123! \
+        --portal-hostname=ap.invisily.org \
+        --content-portal-hostname=cp.invisily.org \
+        --content-portal-ip="$content_portal_ip" \
+        --content-portal-ssh-username=invisily \
+        --verbose
+}
+
+# Prompt the user for the database and content portal IPs
+read -p "Enter the IP address for the database portal: " db_ip
+read -p "Enter the IP address for the content portal: " content_portal_ip
+
+# Execute the Install-invisily.sh script with user-provided IPs
+execute_install_script "$db_ip" "$content_portal_ip"
