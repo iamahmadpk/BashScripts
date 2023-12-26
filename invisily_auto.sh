@@ -53,7 +53,16 @@ repo_file=$(basename "$repo_url")
 unzip "$repo_file"
 
 # Change directory to the extracted repository
-cd "${repo_file%.*}"
+#cd "${repo_file%.*}"
+change_directory() {
+    local matching_dir=$(find . -type d -name 'invisily*' -print -quit)
+    if [ -n "$matching_dir" ]; then
+        cd "$matching_dir" || exit 1
+    else
+        echo "Directory matching pattern 'invisily*' not found."
+        exit 1
+    fi
+}
 
 execute_install_script() {
     local db_ip="$1"
@@ -77,6 +86,6 @@ execute_install_script() {
 # Prompt the user for the database and content portal IPs
 read -p "Enter the IP address for the database portal: " db_ip
 read -p "Enter the IP address for the content portal: " content_portal_ip
-
+change_directory
 # Execute the Install-invisily.sh script with user-provided IPs
 execute_install_script "$db_ip" "$content_portal_ip"
